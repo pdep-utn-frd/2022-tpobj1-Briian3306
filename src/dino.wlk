@@ -10,6 +10,7 @@ object juego{
 		game.title("Dino Game")
 		game.addVisual(suelo)
 		game.addVisual(cactus)
+		game.addVisual(trampolin)
 		game.addVisual(dino)
 		game.addVisual(reloj)
 	
@@ -23,6 +24,7 @@ object juego{
 		dino.iniciar()
 		reloj.iniciar()
 		cactus.iniciar()
+		trampolin.iniciar()
 	}
 	
 	method jugar(){
@@ -38,6 +40,7 @@ object juego{
 	method terminar(){
 		game.addVisual(gameOver)
 		cactus.detener()
+		trampolin.detener()
 		reloj.detener()
 		dino.morir()
 	}
@@ -97,6 +100,34 @@ object cactus {
 	}
 }
 
+object trampolin {
+	 
+	const posicionInicial = game.at(game.width()+0.randomUpTo(10).truncate(0),suelo.position().y()+1)
+	var position = posicionInicial
+
+	method image() = "box.png"
+	method position() = position
+	
+	method iniciar(){
+		position = posicionInicial
+		game.onTick(velocidad,"moverCactus",{self.mover()})
+	}
+	
+	method mover(){
+		position = position.left(1)
+		if (position.x() == -1)
+			position = posicionInicial
+	}
+	
+	method chocar(){
+		dino.poder()
+
+	}
+    method detener(){
+		game.removeTickEvent("moverCactus")
+	}
+}
+
 object suelo{
 	
 	method position() = game.origin().up(1)
@@ -108,9 +139,18 @@ object suelo{
 object dino {
 	var vivo = true
 	var position = game.at(1,suelo.position().y())
+	var imagen = "dino.png"
 	
-	method image() = "dino.png"
+	method image() = imagen
 	method position() = position
+	
+	method poder(){
+		imagen = "dinopower.png"
+		self.subir()
+		game.schedule(velocidad*3,{self.bajar()})
+		game.schedule(velocidad*10,{imagen="dino.png"})
+		
+	}
 	
 	method saltar(){
 		if(position.y() == suelo.position().y()) {
@@ -136,4 +176,6 @@ object dino {
 	method estaVivo() {
 		return vivo
 	}
+
+
 }
