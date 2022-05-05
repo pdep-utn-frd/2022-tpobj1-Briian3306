@@ -10,7 +10,7 @@ object juego{
 		game.title("Dino Game")
 		game.addVisual(suelo)
 		game.addVisual(cactus)
-		game.addVisual(trampolin)
+		game.addVisual(box)
 		game.addVisual(dino)
 		game.addVisual(reloj)
 	
@@ -24,7 +24,7 @@ object juego{
 		dino.iniciar()
 		reloj.iniciar()
 		cactus.iniciar()
-		trampolin.iniciar()
+		box.iniciar()
 	}
 	
 	method jugar(){
@@ -40,7 +40,7 @@ object juego{
 	method terminar(){
 		game.addVisual(gameOver)
 		cactus.detener()
-		trampolin.detener()
+		box.detener()
 		reloj.detener()
 		dino.morir()
 	}
@@ -100,7 +100,7 @@ object cactus {
 	}
 }
 
-object trampolin {
+object box {
 	 
 	const posicionInicial = game.at(game.width()+0.randomUpTo(10).truncate(0),suelo.position().y()+1)
 	var position = posicionInicial
@@ -147,6 +147,7 @@ object dino {
 	method poder(){
 		imagen = "dinopower.png"
 		self.subir()
+		game.say(self,"¡Arre, caballo!")
 		game.schedule(velocidad*3,{self.bajar()})
 		game.schedule(velocidad*10,{imagen="dino.png"})
 		
